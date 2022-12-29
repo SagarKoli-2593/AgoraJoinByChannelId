@@ -14,18 +14,18 @@ class MainActivity: FlutterActivity() {
 
     var expirationTimeInSeconds = 3600 // The time after which the token expires
 
-    private val CHANNEL = "samples.flutter.dev/battery"
+    private val CHANNEL = "samples.flutter.dev/agoraToken"
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
             // Note: this method is invoked on the main thread.
                 call, result ->
-            if (call.method == "getBatteryLevel") {
-                val batteryLevel = App.generatedToken(appId,appCertificate,call.argument("channel"),uid,expirationTimeInSeconds)
-                if (batteryLevel != null) {
-                    result.success(batteryLevel)
+            if (call.method == "getNewTokenFromAgora") {
+                val newToken = App.generatedToken(appId,appCertificate,call.argument("channel"),uid,expirationTimeInSeconds)
+                if (newToken != null) {
+                    result.success(newToken)
                 } else {
-                    result.error("UNAVAILABLE", "Battery level not available.", null)
+                    result.error("UNAVAILABLE", "Failed to generate token.", null)
                 }
             } else {
                 result.notImplemented()

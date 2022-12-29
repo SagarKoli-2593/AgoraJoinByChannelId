@@ -21,7 +21,7 @@ class _MyAppState extends State<MyApp> {
   int? _remoteUid;
   bool _localUserJoined = false;
   late RtcEngine _engine;
-  static const platform = MethodChannel('samples.flutter.dev/battery');
+  static const platform = MethodChannel('samples.flutter.dev/agoraToken');
   TextEditingController mycontroller = TextEditingController();
   ChannelMediaOptions channelOptions = ChannelMediaOptions();
 
@@ -32,11 +32,11 @@ class _MyAppState extends State<MyApp> {
     initAgora();
   }
 
-  Future<void> _getBatteryLevel(String channelName) async {
+  Future<void> _generateTokenByChannelId(String channelName) async {
     String batteryLevel;
     try {
       final String result = await platform
-          .invokeMethod('getBatteryLevel', {"channel": channelName});
+          .invokeMethod('getNewTokenFromAgora', {"channel": channelName});
       batteryLevel = result;
     } on PlatformException catch (e) {
       batteryLevel = "Failed to get battery level: '${e.message}'.";
@@ -128,7 +128,7 @@ class _MyAppState extends State<MyApp> {
                     }
                     // _engine.leaveChannel();
                     channel = mycontroller.text.toString();
-                    _getBatteryLevel(channel);
+                    _generateTokenByChannelId(channel);
 
                     /*if(_engine == null){
                       initAgora();
